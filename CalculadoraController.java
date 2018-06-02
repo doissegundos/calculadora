@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -29,10 +30,20 @@ public class CalculadoraController implements Initializable {
     private List<Operações> listaDeOperações = new ArrayList<Operações>();
     private ObservableList<Operações> observableListOperações;
     private double resultado;
+    private double valor1;
+    private double valor2;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        comboBoxOperações();
+        comboBoxOperações(); //teste()
+        operaçõesComboBox.getSelectionModel().selectedItemProperty().addListener((obs, ant, nov) -> {
+            if (teste() == false) {
+                valor2TextField.setDisable(true);
+
+            } else {
+                valor2TextField.setDisable(false);
+            }
+        });
 
     }
 
@@ -62,10 +73,12 @@ public class CalculadoraController implements Initializable {
         operaçõesComboBox.setItems(observableListOperações);
 
     }
+
     @FXML
     public void operaçãoescolhida() {
-        Double valor1 = Double.parseDouble(valor1TextField.getText());
-        Double valor2 = Double.parseDouble(valor2TextField.getText());
+
+        valor1 = Double.parseDouble(valor1TextField.getText());
+        valor2 = Double.parseDouble(valor2TextField.getText());
         Operações operações = operaçõesComboBox.getSelectionModel().getSelectedItem();
         String ope = operações.getOperações();
         switch (ope) {
@@ -88,14 +101,13 @@ public class CalculadoraController implements Initializable {
             case "** Exponenciação":
                 resultado = Math.pow(valor1, valor2);
                 resultadoTextField.setText(String.valueOf(resultado));
-
                 break;
             case "! Fatorial":
-                int fatorial=Integer.parseInt(valor1TextField.getText());
-                int b=1;
-                for(int i=1;i<=fatorial;i++){
-                    b = b*i;
-                }                                
+                int fatorial = Integer.parseInt(valor1TextField.getText());
+                int b = 1;
+                for (int i = 1; i <= fatorial; i++) {
+                    b = b * i;
+                }
                 resultadoTextField.setText(String.valueOf(b));
                 break;
             case "% Porcentagem":
@@ -110,6 +122,7 @@ public class CalculadoraController implements Initializable {
         }
 
     }
+
     @FXML
     public void botãoUsar() {
         String valorResultado;
@@ -118,37 +131,9 @@ public class CalculadoraController implements Initializable {
         valor2TextField.setText(valorResultado);
     }
 
-    @FXML
-    public void desabilitarTextField() {
+    public boolean teste() {
         Operações operações = operaçõesComboBox.getSelectionModel().getSelectedItem();
-        String ope = operações.getOperações();
-        switch (ope) {
-            case "+ Adição":
-                valor2TextField.setEditable(true);
-                break;
-            case "- Subtração":
-                valor2TextField.setEditable(true);
-                break;
-            case "/ Divisão":
-                valor2TextField.setEditable(true);
-                break;
-            case "Multiplicação":
-                valor2TextField.setEditable(true);
-                break;
-            case "** Exponenciação":
-                valor2TextField.setEditable(true);
-                break;
-            case "! Fatorial":
-                valor2TextField.setEditable(false);
-                break;
-            case "% Porcentagem":
-                valor2TextField.setEditable(false);
-                break;
-            case "_ Negativo":
-                valor2TextField.setEditable(false);
-                break;
-
-        }
-
+        boolean ope = operações.getBinario();
+        return ope;
     }
 }
