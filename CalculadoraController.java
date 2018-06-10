@@ -1,4 +1,4 @@
-package calculadora;
+package calculadoracorrigido;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,14 +37,12 @@ public class CalculadoraController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         comboBoxOperações(); //teste()
         operaçõesComboBox.getSelectionModel().selectedItemProperty().addListener((obs, ant, nov) -> {
-            if (teste() == false) {
+            if (operaçãoBinaria() == false) {
                 valor2TextField.setDisable(true);
-
             } else {
                 valor2TextField.setDisable(false);
             }
         });
-
     }
 
     public void comboBoxOperações() {
@@ -69,36 +67,38 @@ public class CalculadoraController implements Initializable {
 
         // adicionando ao observableList
         observableListOperações = FXCollections.observableArrayList(listaDeOperações);
-
         operaçõesComboBox.setItems(observableListOperações);
-
     }
 
     @FXML
     public void operaçãoescolhida() {
-
-        valor1 = Double.parseDouble(valor1TextField.getText());
-        valor2 = Double.parseDouble(valor2TextField.getText());
+        try{
+            valor1 = Double.parseDouble(valor1TextField.getText());
         Operações operações = operaçõesComboBox.getSelectionModel().getSelectedItem();
         String ope = operações.getOperações();
         switch (ope) {
             case "+ Adição":
+                valor2 = Double.parseDouble(valor2TextField.getText());
                 resultado = valor1 + valor2;
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
             case "- Subtração":
+                valor2 = Double.parseDouble(valor2TextField.getText());
                 resultado = valor1 - valor2;
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
             case "/ Divisão":
+                valor2 = Double.parseDouble(valor2TextField.getText());
                 resultado = valor1 / valor2;
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
             case "* Multiplicação":
+                valor2 = Double.parseDouble(valor2TextField.getText());
                 resultado = valor1 * valor2;
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
             case "** Exponenciação":
+                valor2 = Double.parseDouble(valor2TextField.getText());
                 resultado = Math.pow(valor1, valor2);
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
@@ -118,22 +118,27 @@ public class CalculadoraController implements Initializable {
                 resultado = -valor1;
                 resultadoTextField.setText(String.valueOf(resultado));
                 break;
-
-        }
-
+        }            
+        }catch(Exception erro){    
+            
+        }        
     }
 
     @FXML
     public void botãoUsar() {
-        String valorResultado;
-        valorResultado = resultadoTextField.getText();
-        valor1TextField.setText(valorResultado);
-        valor2TextField.setText(valorResultado);
+        try {
+            String valorResultado;
+            valorResultado = resultadoTextField.getText();
+            valor1TextField.setText(valorResultado);
+        } catch (Exception erro) {
+
+        }
     }
 
-    public boolean teste() {
+    public boolean operaçãoBinaria() {
         Operações operações = operaçõesComboBox.getSelectionModel().getSelectedItem();
         boolean ope = operações.getBinario();
         return ope;
     }
+
 }
